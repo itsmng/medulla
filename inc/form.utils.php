@@ -20,12 +20,14 @@ function renderInput($attributes) {
             $out .= " $name='$value'";
         }
         $out .= ">";
-        foreach ($attributes['values'] as $key => $item) {
-            $out .= "<option value='$key'";
-            if ($attributes['value'] == $key) {
-                $out .= " selected='selected'";
+        if (isset($attributes['values'])) {
+            foreach ($attributes['values'] as $key => $item) {
+                $out .= "<option value='$key'";
+                if ($attributes['value'] == $key) {
+                    $out .= " selected='selected'";
+                }
+                $out .= ">$item</option>";
             }
-            $out .= ">$item</option>";
         }
         $out .= "</select>";
     } else {

@@ -31,7 +31,7 @@
  */
 
  include_once GLPI_ROOT . '/inc/includes.php';
- include_once GLPI_ROOT . '/ng/form.utils.php';
+ include_once Plugin::getPhpDir('medulla') . '/inc/form.utils.php';
 
  class PluginMedullaMedulla extends CommonDBTM {
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
@@ -57,7 +57,7 @@
                 ]
             ]
         ];
-        renderTwigForm($form);
+        echo renderForm($form);
         return true;
     }
  }
