@@ -35,7 +35,7 @@ class PluginMedullaConfig extends CommonDBTM {
      * 
      * @return void
      */
-    public function showConfigForm() {
+    public function showConfigForm() : void {
         global $DB;
         $image = Plugin::getWebDir('medulla').'/img/medulla.png';
         $action = Plugin::getWebDir('medulla').'/front/config.form.php';
@@ -107,7 +107,7 @@ class PluginMedullaConfig extends CommonDBTM {
         echo renderForm($form);
     }
 
-    public function updateConfig() {
+    public function updateConfig() : void {
         global $DB;
         $host = $_POST['host'];
         $port = $_POST['port'];
@@ -118,7 +118,7 @@ class PluginMedullaConfig extends CommonDBTM {
         $DB->queryOrDie($query, $DB->error());
     }
 
-    public function getConfig() {
+    public function getConfig() : array {
         global $DB;
         $query = "SELECT * FROM `glpi_plugin_medulla_config` WHERE `id` = 1";
         $result = $DB->query($query);

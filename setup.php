@@ -31,10 +31,10 @@
  */
 
  define('MEDULLAPLUGIN_VERSION', '0.1.0');
- define('MEDULLAPLUGIN_AUTHOR', 'ITSM Dev Team, AntoineLemarchand');
+ define('MEDULLAPLUGIN_AUTHOR', 'ITSM Dev Team, AntoineLemarchand, Minzord');
  define('MEDULLAPLUGIN_HOMEPAGE', 'https://github.com/AntoineLemarchand/medulla');
 
-function plugin_version_medulla() {
+function plugin_version_medulla() : array {
     return array(
         'name'           => "Medulla",
         'version'        => MEDULLAPLUGIN_VERSION,
@@ -52,7 +52,7 @@ function plugin_version_medulla() {
     );
 }
 
-function plugin_medulla_check_prerequisites() {
+function plugin_medulla_check_prerequisites() : bool {
     if (version_compare(ITSM_VERSION, '1.5', 'lt')) {
         echo "This plugin requires ITSM >= 1.5";
         return false;
@@ -60,25 +60,27 @@ function plugin_medulla_check_prerequisites() {
     return true;
 }
 
-function plugin_medulla_check_config() {
+function plugin_medulla_check_config() : bool {
     return true;
 }
 
 
-function plugin_init_medulla() {
+function plugin_init_medulla() : void {
     global $PLUGIN_HOOKS;
 
-    Plugin::registerClass('PluginMedullaProfile', ['addtabon' => ['Profile']]);
+    // Plugin::registerClass('PluginMedullaProfile', ['addtabon' => ['Profile']]);
     
     $PLUGIN_HOOKS['csrf_compliant']['medulla'] = true;
-    $PLUGIN_HOOKS['change_profile']['medulla'] = ['PluginMedullaProfile','initProfile'];
+    // $PLUGIN_HOOKS['change_profile']['medulla'] = ['PluginMedullaProfile','initProfile'];
     if (Session::haveRight("plugin_medulla_medulla", READ)) {
-        Plugin::registerClass('PluginMedullaMedulla', [
-            'addtabon' => [
-                'Computer',
-                'Phone',
-            ]
-        ]);
+        $PLUGIN_HOOKS['menu_toadd']['medulla'] = ['config' => array(PluginMedullaConfig::class)];
+        $PLUGIN_HOOKS['menu_toadd']['medulla'] = ['tools' => array(PluginMedullaMedulla::class)];
+        // Plugin::registerClass('PluginMedullaMedulla', [
+        //     'addtabon' => [
+        //         'Computer',
+        //         'Phone',
+        //     ]
+        // ]);
     
     }
     if (Session::haveRight("profile", UPDATE)) {

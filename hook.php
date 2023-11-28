@@ -31,7 +31,7 @@
  */
 
 
-function plugin_medulla_install() {
+function plugin_medulla_install() : bool {
     global $DB;
 
     //get default values for fields 
@@ -72,7 +72,7 @@ function plugin_medulla_install() {
     return true;
 }
 
-function plugin_medulla_uninstall() {
+function plugin_medulla_uninstall() : bool {
     global $DB;
 
     // Drop tables

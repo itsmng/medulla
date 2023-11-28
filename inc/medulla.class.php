@@ -37,8 +37,7 @@ include_once Plugin::getPhpDir('medulla') . '/inc/form.utils.php';
 class PluginMedullaMedulla extends CommonDBTM
 {
 
-    function getAgentInfo()
-    {
+    function getAgentInfo() : array {
         global $DB;
         $query = "SELECT * FROM `glpi_plugin_medulla_config` WHERE `id` = 1";
         $result = $DB->query($query);
@@ -61,8 +60,7 @@ class PluginMedullaMedulla extends CommonDBTM
      * @return array Un tableau contenant les en-têtes HTTP et le corps de la réponse.
      * @throws Exception Si une erreur se produit lors de la connexion ou de l'envoi de la requête.
      */
-    function executeRequest($method, $params, $includeCookie = false)
-    {
+    function executeRequest($method, $params, $includeCookie = false) : array {
         $agentInfo = $this->getAgentInfo();
         $requestXml = xmlrpc_encode_request($method, $params, ['output_type' => 'php', 'verbosity' => 'pretty', 'encoding' => 'UTF-8']);
 
@@ -115,8 +113,7 @@ class PluginMedullaMedulla extends CommonDBTM
         return [$headers, $body];
     }
 
-    function authenticateAndGetCookie($method, $params)
-    {
+    function authenticateAndGetCookie($method, $params) : string {
         list($header, $body) = $this->executeRequest($method, $params);
 
         $headers_array = [];
@@ -137,8 +134,7 @@ class PluginMedullaMedulla extends CommonDBTM
         return $cookie;
     }
 
-    function sendXmlRpcRequest($method, $params)
-    {
+    function sendXmlRpcRequest($method, $params) {
         list($header, $body) = $this->executeRequest($method, $params, true);
         $responseXml = substr($body, strpos($body, '<?xml'));
         $response = xmlrpc_decode($responseXml);
@@ -148,13 +144,11 @@ class PluginMedullaMedulla extends CommonDBTM
         return $response;
     }
 
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-    {
+    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
         return "Medulla";
     }
 
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-    {
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) : bool {
         $form = [
             'action' => Plugin::getWebDir('looztick') . '/front/looztick.form.php',
             'submit' => 'Link',

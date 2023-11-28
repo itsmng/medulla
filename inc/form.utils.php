@@ -1,6 +1,6 @@
 <?php
 
-function renderInput($attributes) {
+function renderInput($attributes) : string {
     $out = "";
     if ($attributes['type'] == 'checkbox') {
         $out = "<input class='form-check-input'";
@@ -40,7 +40,7 @@ function renderInput($attributes) {
     return $out;
 }
 
-function renderForm($form, $additionnalHtml = '', $col = 2) {
+function renderForm($form, $additionnalHtml = '', $col = 2) : string {
     $method = $form['method'] ?? 'post';
     $options = ['actions', 'after', 'before', 'hooks'];
     $out = <<<HTML

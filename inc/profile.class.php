@@ -38,7 +38,7 @@ class PluginMedullaProfile extends CommonDBTM {
 	 *
 	 * @return boolean
 	 */
-	static function canCreate() {
+	static function canCreate() : bool {
 		if (isset($_SESSION["profile"])) return ($_SESSION["profile"]['medulla'] == 'w');
 		return false;
 	}
@@ -48,7 +48,7 @@ class PluginMedullaProfile extends CommonDBTM {
 	 *
 	 * @return boolean
 	 */
-	static function canView() {
+	static function canView() : bool {
 		if (isset($_SESSION["profile"])) return ($_SESSION["profile"]['medulla'] == 'w' || $_SESSION["profile"]['medulla'] == 'r');
 		return false;
 	}
@@ -59,7 +59,7 @@ class PluginMedullaProfile extends CommonDBTM {
 	 * @param  int $ID
 	 * @return void
 	 */
-	static function createAdminAccess($ID) {
+	static function createAdminAccess($ID) : void {
 		$myProf = new self();
 		if (!$myProf->getFromDB($ID)) $myProf->add(array('id' => $ID, 'right' => 'w'));
 	}
@@ -71,7 +71,7 @@ class PluginMedullaProfile extends CommonDBTM {
 	 * @param  array $rights
 	 * @return void
 	 */
-	static function addDefaultProfileInfos($profiles_id, $rights) {
+	static function addDefaultProfileInfos($profiles_id, $rights) : void {
 		$profileRight = new ProfileRight();
 
 		foreach ($rights as $right => $value) {
@@ -92,7 +92,7 @@ class PluginMedullaProfile extends CommonDBTM {
 	 *
 	 * @return void
 	 */
-	static function changeProfile() {
+	static function changeProfile() : void {
 		$prof = new self();
 
 		if ($prof->getFromDB($_SESSION['glpiactiveprofile']['id'])) {
@@ -109,7 +109,7 @@ class PluginMedullaProfile extends CommonDBTM {
 	 * @param  int $withtemplate
 	 * @return string
 	 */
-	function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+	function getTabNameForItem(CommonGLPI $item, $withtemplate=0) : string {
 		if (Session::haveRight("profile", UPDATE) && $item->getType() == 'Profile') {
 			return __('Medulla Plugin', 'medulla');
 		}
@@ -146,7 +146,7 @@ class PluginMedullaProfile extends CommonDBTM {
 	 *
 	 * @return array
 	 */
-	static function getRightsGeneral() {
+	static function getRightsGeneral() : array {
 		$rights = [
 			[
 				'itemtype'  => 'PluginMedullaProfile',
