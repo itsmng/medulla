@@ -39,18 +39,15 @@ function plugin_medulla_install() {
         $createQuery = <<<SQL
             CREATE TABLE glpi_plugin_medulla_config (
                 id int(11) NOT NULL AUTO_INCREMENT,
-                api_key varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                firstname varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                lastname varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                mobile varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                friendmobile varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                countrycode varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                email varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                host varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                port smallint unsigned COLLATE utf8_unicode_ci NOT NULL,
+                username varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                password varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         SQL;
         $insertQuery = <<<SQL
-            INSERT INTO glpi_plugin_medulla_config (id, api_key) VALUES (1, '');
+            INSERT INTO glpi_plugin_medulla_config (id, host, port, username, password) VALUES (1, '', 80, '', '');
         SQL;
 
         $DB->queryOrDie($createQuery, $DB->error());

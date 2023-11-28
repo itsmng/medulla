@@ -40,7 +40,7 @@ function renderInput($attributes) {
     return $out;
 }
 
-function renderForm($form, $additionnalHtml = '') {
+function renderForm($form, $additionnalHtml = '', $col = 2) {
     $method = $form['method'] ?? 'post';
     $options = ['actions', 'after', 'before', 'hooks'];
     $out = <<<HTML
@@ -56,7 +56,7 @@ function renderForm($form, $additionnalHtml = '') {
             HTML;
         }
         $out .= <<<HTML
-        <div class="row">
+        <div class="row row-cols-{$col}">
         HTML;
         foreach ($bloc['inputs'] as $title => $input) {
             if (isset($input['type']) && $input['type'] != 'hidden') {
@@ -79,18 +79,18 @@ function renderForm($form, $additionnalHtml = '') {
                 <div class="form-text mx-2">{$input['after']}</div>
                 HTML;
             }
-            if (isset($intpu['actions'])) {
+            if (isset($input['actions'])) {
                 foreach (($input['actions']) as $action) {
                     $out .= <<<HTML
                     <button type="button" class="btn border" onClick="{$action['onClick']}"><a class="{$action['icon']}"></a></button>
                     HTML;
                 }
-                if ($input['type'] && $input['type'] != 'hidden') {
-                    $out .= <<<HTML
-                        </div>
+            }
+            if (isset($input['type']) && $input['type'] != 'hidden') {
+                $out .= <<<HTML
                     </div>
-                    HTML;
-                }
+                </div>
+                HTML;
             }
         }
         $out .= <<<HTML
@@ -111,7 +111,13 @@ function renderForm($form, $additionnalHtml = '') {
     } else {
         foreach ($form['buttons'] as $button) {
             $out .= <<<HTML
-            <button type="submit" class='btn btn-primary'>{$button['value']}</button>
+            <button 
+            HTML;
+            foreach ($button as $name => $value) {
+                $out .= "$name='$value'";
+            }
+            $out .= <<<HTML
+            >{$button['value']}</button>
             HTML;
         }
     }

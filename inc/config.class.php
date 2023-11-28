@@ -36,10 +36,12 @@ class PluginMedullaConfig extends CommonDBTM {
      * @return void
      */
     public function showConfigForm() {
-
+        global $DB;
         $image = Plugin::getWebDir('medulla').'/img/medulla.png';
+        $action = Plugin::getWebDir('medulla').'/front/config.form.php';
+        $config = iterator_to_array($DB->query("SELECT * FROM `glpi_plugin_medulla_config` WHERE `id` = 1"));
         $form = [
-            'action' => $_SERVER['PHP_SELF'],
+            'action' => $action,
             'buttons' => [
                 [
                     'type' => 'submit',
@@ -63,15 +65,39 @@ class PluginMedullaConfig extends CommonDBTM {
                             <img src="{$image}" alt="Medulla logo" class="mx-auto" style="max-height: 12rem;width: auto"/>
                             HTML,
                         ],
+                        'action' => [
+                            'type' => 'hidden',
+                            'name' => 'update_config',
+                            'value' => '',
+                        ],
                     ]
                 ],
                 __('Configuration') => [
                     'visible' => true,
                     'inputs' => [
-                        __('Medulla server endpoint') => [
+                        __('Server host') => [
                             'type' => 'text',
-                            'name' => 'endpoint',
+                            'name' => 'host',
                             'placeholder' => 'https://medulla.example.com',
+                            'value' => $config[0]['host'],
+                        ],
+                        __('Server port') => [
+                            'type' => 'number',
+                            'name' => 'port',
+                            'min' => 0,
+                            'max' => 65535,
+                            'placeholder' => '443',
+                            'value' => $config[0]['port'],
+                        ],
+                        __('Username') => [
+                            'type' => 'text',
+                            'name' => 'username',
+                            'value' => $config[0]['username'],
+                        ],
+                        __('Password') => [
+                            'type' => 'password',
+                            'name' => 'password',
+                            'value' => $config[0]['password'],
                         ],
                     ]
                 ]
@@ -82,5 +108,20 @@ class PluginMedullaConfig extends CommonDBTM {
     }
 
     public function updateConfig() {
+        global $DB;
+        $host = $_POST['host'];
+        $port = $_POST['port'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $query = "UPDATE `glpi_plugin_medulla_config` SET
+        `host` = '{$host}', `port` = '{$port}', `username` = '{$username}', `password` = '{$password}' WHERE `id` = 1";
+        $DB->queryOrDie($query, $DB->error());
+    }
+
+    public function getConfig() {
+        global $DB;
+        $query = "SELECT * FROM `glpi_plugin_medulla_config` WHERE `id` = 1";
+        $result = $DB->query($query);
+        return iterator_to_array($result)[0];
     }
 }

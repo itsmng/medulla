@@ -33,8 +33,24 @@ include("../../../inc/includes.php");
 require_once("../inc/config.class.php");
 
 $plugin = new Plugin();
-
 if($plugin->isActivated("medulla")) {
+    if (isset($_POST["update_config"])) {
+        $config = new PluginMedullaConfig();
+        $medulla = new PluginMedullaMedulla();
+        
+        $config->updateConfig();
+        try {
+            $configContent = $config->getConfig();
+            setcookie('medulla', $medulla->authenticateAndGetCookie('base.ldapAuth', ['root', 'Sive0DEVDEMO']));
+        } catch (Exception $e) {
+            die($e->getMessage());
+            Session::addMessageAfterRedirect($e->getMessage(), false);
+            Html::back();
+        }
+
+        Session::addMessageAfterRedirect(__('Configuration updated'), true);
+        Html::back();
+    }
     $config = new PluginMedullaConfig();
 
     Html::header("Medulla", $_SERVER["PHP_SELF"], "config", "plugins");
