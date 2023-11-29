@@ -48,12 +48,6 @@ class PluginMedullaConfig extends CommonDBTM {
                     'name' => 'update_config',
                     'value' => __('Update'),
                     'class' => 'submit-button btn btn-warning',
-                ],
-                [
-                    'type' => 'button',
-                    'name' => 'sync',
-                    'value' => __('Sync'),
-                    'class' => 'submit-button btn btn-primary',
                 ]
             ],
             'content' => [
