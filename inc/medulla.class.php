@@ -32,7 +32,6 @@
  */
 
 include_once GLPI_ROOT . '/inc/includes.php';
-include_once Plugin::getPhpDir('medulla') . '/inc/form.utils.php';
 
 class PluginMedullaMedulla extends CommonDBTM
 {
@@ -47,7 +46,7 @@ class PluginMedullaMedulla extends CommonDBTM
             "host" => $config['host'],
             "port" => $config['port'],
             'login' => $config['username'],
-            'password' => $config['password']
+            'password' => Toolbox::sodiumDecrypt($config['password'])
         ];
     }
 
@@ -85,7 +84,7 @@ class PluginMedullaMedulla extends CommonDBTM
         $proto = $agentInfo["scheme"] == "https" ? "ssl://" : "";
         if ($proto) {
             stream_context_set_option($context, "ssl", "allow_self_signed", false);
-            stream_context_set_option($context, "ssl", "verify_peer", true);
+            stream_context_set_option($context, "ssl", "verify_peer", false);
         }
 
         // On ouvre la connexion au serveur
@@ -134,6 +133,14 @@ class PluginMedullaMedulla extends CommonDBTM
         return $cookie;
     }
 
+    /**
+     * Exécute une requête XML-RPC.
+     *
+     * @param string $method Le nom de la méthode XML-RPC à appeler.
+     * @param array $params Les paramètres à passer à la méthode.
+     * @return array Un tableau contenant les en-têtes HTTP et le corps de la réponse.
+     * @throws Exception Si une erreur se produit lors de la connexion ou de l'envoi de la requête.
+     */
     function sendXmlRpcRequest($method, $params) {
         list($header, $body) = $this->executeRequest($method, $params, true);
         $responseXml = substr($body, strpos($body, '<?xml'));
@@ -144,7 +151,14 @@ class PluginMedullaMedulla extends CommonDBTM
         return $response;
     }
 
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-        return "Medulla";
+    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) : string {
+        return "Medulla - Packages";
+    }
+
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) : bool {
+        $instance = new PluginMedullaGetdata();
+        echo $instance->pushtoview();
+            
+        return true;
     }
 }

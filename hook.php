@@ -43,6 +43,8 @@ function plugin_medulla_install() : bool {
                 port smallint unsigned COLLATE utf8_unicode_ci NOT NULL,
                 username varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                 password varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                ldap_user varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                ldap_password varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         SQL;

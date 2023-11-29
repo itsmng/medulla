@@ -71,19 +71,9 @@ function plugin_init_medulla() : void {
     // Plugin::registerClass('PluginMedullaProfile', ['addtabon' => ['Profile']]);
     
     $PLUGIN_HOOKS['csrf_compliant']['medulla'] = true;
-    // $PLUGIN_HOOKS['change_profile']['medulla'] = ['PluginMedullaProfile','initProfile'];
-    if (Session::haveRight("plugin_medulla_medulla", READ)) {
-        $PLUGIN_HOOKS['menu_toadd']['medulla'] = ['config' => array(PluginMedullaConfig::class)];
-        $PLUGIN_HOOKS['menu_toadd']['medulla'] = ['tools' => array(PluginMedullaMedulla::class)];
-        // Plugin::registerClass('PluginMedullaMedulla', [
-        //     'addtabon' => [
-        //         'Computer',
-        //         'Phone',
-        //     ]
-        // ]);
-    
-    }
+
     if (Session::haveRight("profile", UPDATE)) {
         $PLUGIN_HOOKS['config_page']['medulla'] = 'front/config.form.php';
+        $PLUGIN_HOOKS['menu_toadd']['medulla'] = ['tools' => array(PluginMedullaMenu::class)];
     }
 }

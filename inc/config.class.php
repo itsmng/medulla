@@ -1,4 +1,7 @@
 <?php
+
+use DoctrineModule\Options\Authentication;
+
 /**
  * ---------------------------------------------------------------------
  * ITSM-NG
@@ -30,12 +33,41 @@
  * ---------------------------------------------------------------------
  */
 class PluginMedullaConfig extends CommonDBTM {
+
+    static $rightname = 'config';
+
+    /**
+     * getTypeName
+     *
+     * @param  int $nb
+     * @return string
+     */
+    static function getTypeName($nb = 0)
+    {
+        return __("Medulla", 'medulla');
+    }
+
+    /**
+     * get menu content
+     *
+     * @return array
+     */
+    static function getMenuContent()
+    {
+        $menu = array();
+
+        $menu['title'] = "Medulla";
+        $menu['page'] = "/plugins/medulla/front/config.form.php";
+        $menu['icon']  = "fas fa-laptop";
+        return $menu;
+    }
+
     /**
      * Displays the configuration page for the plugin
      * 
      * @return void
      */
-    public function showConfigForm() : void {
+    function showConfigForm() : void {
         global $DB;
         $image = Plugin::getWebDir('medulla').'/img/medulla.png';
         $action = Plugin::getWebDir('medulla').'/front/config.form.php';
@@ -91,7 +123,17 @@ class PluginMedullaConfig extends CommonDBTM {
                         __('Password') => [
                             'type' => 'password',
                             'name' => 'password',
-                            'value' => $config[0]['password'],
+                            'value' => Toolbox::sodiumDecrypt($config[0]['password']),
+                        ],
+                        __('LDAP Login') => [
+                            'type' => 'text',
+                            'name' => 'ldap_user',
+                            'value' => $config[0]['ldap_user'],
+                        ],
+                        __('LDAP Password') => [
+                            'type' => 'password',
+                            'name' => 'ldap_password',
+                            'value' => Toolbox::sodiumDecrypt($config[0]['ldap_password']),
                         ],
                     ]
                 ]
@@ -101,18 +143,20 @@ class PluginMedullaConfig extends CommonDBTM {
         echo renderTwigForm($form);
     }
 
-    public function updateConfig() : void {
+    function updateConfig() : void {
         global $DB;
         $host = $_POST['host'];
         $port = $_POST['port'];
         $username = $_POST['username'];
-        $password = $_POST['password'];
+        $password = Toolbox::sodiumEncrypt($_POST['password']);
+        $ldap_user = $_POST['ldap_user'];
+        $ldap_password = Toolbox::sodiumEncrypt($_POST['ldap_password']);
         $query = "UPDATE `glpi_plugin_medulla_config` SET
-        `host` = '{$host}', `port` = '{$port}', `username` = '{$username}', `password` = '{$password}' WHERE `id` = 1";
+        `host` = '{$host}', `port` = '{$port}', `username` = '{$username}', `password` = '{$password}', `ldap_user` = '{$ldap_user}', `ldap_password` = '{$ldap_password}' WHERE `id` = 1";
         $DB->queryOrDie($query, $DB->error());
     }
 
-    public function getConfig() : array {
+    function getConfig() : array {
         global $DB;
         $query = "SELECT * FROM `glpi_plugin_medulla_config` WHERE `id` = 1";
         $result = $DB->query($query);
