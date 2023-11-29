@@ -147,25 +147,4 @@ class PluginMedullaMedulla extends CommonDBTM
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
         return "Medulla";
     }
-
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) : bool {
-        $form = [
-            'action' => Plugin::getWebDir('looztick') . '/front/looztick.form.php',
-            'submit' => 'Link',
-            'content' => [
-                '' => [
-                    'visible' => true,
-                    'inputs' => [
-                        "QR code" => [
-                            'name' => 'qrcode',
-                            'id' => 'looztick_qrcode_dropdown',
-                            'type' => 'select',
-                        ],
-                    ]
-                ]
-            ]
-        ];
-        echo renderForm($form);
-        return true;
-    }
 }
