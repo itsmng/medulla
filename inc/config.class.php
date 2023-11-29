@@ -103,8 +103,8 @@ class PluginMedullaConfig extends CommonDBTM {
                 ]
             ]
         ];
-        require Plugin::getPhpDir('medulla') . "/inc/form.utils.php";
-        echo renderForm($form);
+        require_once GLPI_ROOT . "/ng/form.utils.php";
+        echo renderTwigForm($form);
     }
 
     public function updateConfig() : void {
