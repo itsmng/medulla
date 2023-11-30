@@ -53,8 +53,8 @@ function plugin_version_medulla() : array {
 }
 
 function plugin_medulla_check_prerequisites() : bool {
-    if (version_compare(ITSM_VERSION, '1.5', 'lt')) {
-        echo "This plugin requires ITSM >= 1.5";
+    if (version_compare(ITSM_VERSION, '2.0.0', 'lt')) {
+        echo "This plugin requires ITSM >= 2.0.0";
         return false;
     }
     return true;
@@ -76,4 +76,12 @@ function plugin_init_medulla() : void {
         $PLUGIN_HOOKS['config_page']['medulla'] = 'front/config.form.php';
         $PLUGIN_HOOKS['menu_toadd']['medulla'] = ['tools' => array(PluginMedullaMenu::class)];
     }
+
+    // if (Session::haveRight("computer", READ)) {
+        Plugin::registerClass('PluginMedullaComputer', [
+            'addtabon' => [
+                'Computer',
+            ]
+        ]);
+    // }
 }

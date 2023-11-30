@@ -42,11 +42,21 @@ class PluginMedullaGetdata extends PluginMedullaMedulla {
         return $packages;
     }
 
+    private function listcomputer() {
+
+        // Get PC form bdd
+        global $DB;
+        $query = "SELECT * FROM `glpi_computers` WHERE is_deleted = 0";
+        $packages = $DB->queryOrDie($query, $DB->error());
+        $packages = iterator_to_array($packages);
+        return $packages;
+    }
+
     function pushtoview() : string {
 
         $packages = $this->getcomputer();
         $audits = $this->getaudit();
-
+        $computers = $this->listcomputer();
 
         require_once GLPI_ROOT . "/vendor/autoload.php";
         $loader = new FilesystemLoader(GLPI_ROOT . Plugin::getWebDir("medulla") . "/templates");
@@ -54,6 +64,7 @@ class PluginMedullaGetdata extends PluginMedullaMedulla {
         return($twig->render('getdata.twig', [
             'packages' => $packages,
             'audits' => $audits,
+            'computers' => $computers
         ]));
     }
 }
